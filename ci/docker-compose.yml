@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  bet_maker:
+    build:
+      context: ../
+      dockerfile: ci/bet_maker/Dockerfile
+    depends_on:
+      - psql
+    ports:
+      - "${BET_MAKER_PORT}:8000"
+    restart: always
+    tty: true
+    volumes:
+      - "../app/bet_maker/src/:/var/app"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      BET_MAKER_EXPORT_AUTH: ${BET_MAKER_EXPORT_AUTH}
+
+  psql:
+    image: "postgres:alpine"
+    restart: always
+    ports:
+      - "${POSTGRES_EXT_PORT}:5432"
+    volumes:
+      - "psql_data:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+  line_provider:
+    build:
+      context: ../
+      dockerfile: ci/line_provider/Dockerfile
+    ports:
+      - "${LINE_PROVIDER_PORT}:8000"
+    restart: always
+    tty: true
+    volumes:
+      - "../app/line_provider/src/:/var/app"
+    environment:
+      BET_MAKER_URL: ${BET_MAKER_URL}
+      BET_MAKER_EXPORT_AUTH: ${BET_MAKER_EXPORT_AUTH}
+
+volumes:
+  psql_data: {}

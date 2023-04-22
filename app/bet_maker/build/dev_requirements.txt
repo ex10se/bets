@@ -1,0 +1,6 @@
+-r requirements.txt
+
+python-dotenv==1.0.0
+sqlalchemy-stubs==0.4
+flake8==6.0.0
+coverage==7.2.3

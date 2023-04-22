@@ -1,0 +1,11 @@
+*.pyc
+*.pyo
+.coverage
+coverage.xml
+.idea/
+.DS_Store
+/.Python
+*.lock
+.env
+venv/
+dumps/
