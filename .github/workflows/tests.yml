@@ -20,7 +20,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install tox tox-gh-actions tox-docker
-        docker run -p 6379:6379 -e REDIS_PASSWORD=password -d redis:alpine
-    - name: Test with tox
-      run: tox
+        python -m pip install tox tox-gh-actions
+    - name: Test bet_maker with tox
+      run: tox -c app/bet_maker/src/tox.ini
+    - name: Test bet_maker with tox
+      run: tox -c app/line_provider/src/tox.ini
