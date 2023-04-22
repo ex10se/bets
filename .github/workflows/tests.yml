@@ -23,5 +23,5 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Test bet_maker with tox
       run: tox -c app/bet_maker/src/tox.ini
-    - name: Test bet_maker with tox
+    - name: Test line_provider with tox
       run: tox -c app/line_provider/src/tox.ini
