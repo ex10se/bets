@@ -2,15 +2,15 @@ import json
 import logging
 from urllib.parse import urljoin
 
-from httpx import AsyncClient, AsyncHTTPTransport, NetworkError
-from utils import CustomJSONEncoder
+from httpx import AsyncClient, AsyncHTTPTransport, NetworkError, Response
 
 from config import settings
+from utils import CustomJSONEncoder
 
 logger = logging.getLogger(__name__)
 
 
-async def export_events(events: list[dict]) -> None:
+async def export_events(events: list[dict]) -> Response | None:
     try:
         transport = AsyncHTTPTransport(retries=3, verify=False)
         async with AsyncClient(
@@ -22,5 +22,6 @@ async def export_events(events: list[dict]) -> None:
                 timeout=10,
             )
             logger.info(response.text)
+            return response
     except NetworkError as e:
         logger.error(str(e))

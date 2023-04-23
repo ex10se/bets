@@ -1,17 +1,16 @@
 from decimal import Decimal
 
+from db.base import get_session
 from fastapi import Depends, Security, APIRouter, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.status import HTTP_403_FORBIDDEN
-
-from db.base import get_session
 from schemas.bets import BetRequestSchema, BetResponseSchema
 from schemas.clients import ClientRequestSchema, ClientResponseSchema
 from schemas.events import EventDBSchema
 from services.bets import BetService
 from services.clients import ClientService
 from services.events import EventService
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette import status
 
 router = APIRouter()
 security = HTTPBearer()
@@ -51,9 +50,9 @@ async def create_bet(
 ) -> dict | BetResponseSchema:
     client = await ClientService(db_session).retrieve(auth_key=auth_key.credentials)
     if client is None:
-        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail='Invalid authentication credentials')
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Invalid authentication credentials')
     if client.amount < bet.amount:
-        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail='Insufficient funds')
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Insufficient funds')
     async with db_session as session:
         result = await BetService(session).create_by_event(
             client_id=client.id, event_id=bet.event_id, bet_amount=bet.amount,

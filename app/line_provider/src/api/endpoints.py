@@ -1,10 +1,11 @@
 import time
 
-from events_data import Event, events_list, get_events_map
 from fastapi import HTTPException, APIRouter
-from services.events_export import export_events
+from starlette import status
 from starlette.background import BackgroundTasks
-from starlette.status import HTTP_404_NOT_FOUND
+
+from events_data import Event, events_list, get_events_map
+from services.events_export import export_events
 
 router = APIRouter()
 
@@ -36,7 +37,7 @@ async def create_update_event(event: Event, background_tasks: BackgroundTasks) -
 async def get_event(event_id: int):
     event = get_events_map().get(event_id)
     if event is None:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Event not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Event not found')
     return event
 
 

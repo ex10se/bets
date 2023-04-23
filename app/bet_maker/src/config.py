@@ -1,6 +1,6 @@
 from contextlib import suppress
 
-from pydantic import BaseSettings, Field, PostgresDsn, validator
+from pydantic import BaseSettings, PostgresDsn, validator
 
 with suppress(ImportError):
     # подгрузка переменных для локальной разработки, вне докер-контейнера
@@ -10,11 +10,11 @@ with suppress(ImportError):
 
 
 class Settings(BaseSettings):
-    POSTGRES_USER: str = Field(...)
-    POSTGRES_PASSWORD: str = Field(...)
-    POSTGRES_DB: str = Field(...)
+    POSTGRES_USER: str = 'postgres'
+    POSTGRES_PASSWORD: str = 'postgres'
+    POSTGRES_DB: str = 'postgres'
 
-    BET_MAKER_EXPORT_AUTH: str = Field(...)
+    BET_MAKER_EXPORT_AUTH: str = 'auth'
 
     DSN_DATABASE_ASYNC: PostgresDsn = None
 

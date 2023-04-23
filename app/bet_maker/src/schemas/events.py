@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from pydantic import BaseModel, condecimal, validator
-
 from db.models.event import EventState
+from pydantic import BaseModel, condecimal, validator
 
 
 class EventDBSchema(BaseModel):
@@ -10,6 +9,10 @@ class EventDBSchema(BaseModel):
     coefficient: condecimal(max_digits=5, decimal_places=2)
     deadline: datetime
     state: EventState
+
+    @validator("deadline", pre=True)
+    def make_deadline_naive(cls, dt):
+        return datetime.fromtimestamp(dt)
 
     class Config:
         orm_mode = True
