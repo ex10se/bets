@@ -4,8 +4,8 @@ from typing import TypeVar, Type
 from sqlalchemy import Result, update, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-Model = TypeVar("Model")
-Schema = TypeVar("Schema")
+Model = TypeVar('Model')
+Schema = TypeVar('Schema')
 
 
 class BaseService(ABC):

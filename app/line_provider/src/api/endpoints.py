@@ -1,17 +1,16 @@
 import time
 
+from events_data import Event, events_list, get_events_map
 from fastapi import HTTPException, APIRouter
+from services.events_export import export_events
 from starlette import status
 from starlette.background import BackgroundTasks
-
-from events_data import Event, events_list, get_events_map
-from services.events_export import export_events
 
 router = APIRouter()
 
 
-@router.post('/event')
-@router.put('/event')
+@router.post('/event', name='Создание события')
+@router.put('/event', name='Изменение события')
 async def create_update_event(event: Event, background_tasks: BackgroundTasks) -> str:
     if event.id is None:
         event.id = event.get_next_id()
@@ -33,7 +32,9 @@ async def create_update_event(event: Event, background_tasks: BackgroundTasks) -
     return result
 
 
-@router.get('/event/{event_id}')
+@router.get('/event/{event_id}', name='Информация по событию', responses={
+    status.HTTP_404_NOT_FOUND: {'description': 'Событие не найдено'},
+})
 async def get_event(event_id: int):
     event = get_events_map().get(event_id)
     if event is None:
@@ -41,6 +42,6 @@ async def get_event(event_id: int):
     return event
 
 
-@router.get('/events')
+@router.get('/events', name='Список событий', response_model=list[Event])
 async def get_events():
     return [e for e in events_list if time.time() < e.deadline]

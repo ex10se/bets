@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     DSN_DATABASE_ASYNC: PostgresDsn = None
 
-    @validator("DSN_DATABASE_ASYNC", pre=True, always=True)
+    @validator('DSN_DATABASE_ASYNC', pre=True, always=True)
     def prepare_dsn(cls, _, values: dict) -> str:
         return (
             f'postgresql+asyncpg://{values["POSTGRES_USER"]}:{values["POSTGRES_PASSWORD"]}'

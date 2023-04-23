@@ -12,19 +12,19 @@ from db.base import Base
 # базовая модель для автогенерации
 target_metadata = Base.metadata
 
-context.config.set_main_option("sqlalchemy.url", settings.DSN_DATABASE_ASYNC)
+context.config.set_main_option('sqlalchemy.url', settings.DSN_DATABASE_ASYNC)
 
 if context.config.config_file_name is not None:
     fileConfig(context.config.config_file_name)
 
 
 def run_migrations_offline():
-    url = context.config.get_main_option("sqlalchemy.url")
+    url = context.config.get_main_option('sqlalchemy.url')
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
+        dialect_opts={'paramstyle': 'named'},
     )
 
     with context.begin_transaction():
@@ -42,7 +42,7 @@ async def run_migrations_online():
     connectable = AsyncEngine(
         engine_from_config(
             context.config.get_section(context.config.config_ini_section),
-            prefix="sqlalchemy.",
+            prefix='sqlalchemy.',
             poolclass=pool.NullPool,
             future=True,
         )

@@ -2,7 +2,7 @@ import enum
 import time
 from decimal import Decimal
 
-from pydantic import BaseModel, condecimal
+from pydantic import BaseModel, condecimal, Field
 
 from utils import to_dec
 
@@ -14,13 +14,16 @@ class EventState(enum.Enum):
 
 
 class Event(BaseModel):
-    id: int | None = None
-    coefficient: condecimal(max_digits=5, decimal_places=2, gt=Decimal(0))
-    deadline: float
-    state: EventState
+    id: int | None = Field(None, title='id события', example=1)
+    coefficient: condecimal(max_digits=5, decimal_places=2, gt=Decimal(0)) = Field(
+        ..., title='Коэффициент на событие', example=2.3,
+    )
+    deadline: float = Field(..., title='Timestamp дедлайна ставки', example=1682259000.123)
+    state: EventState = Field(..., title='Состояние события', example=EventState.NEW)
 
     @staticmethod
     def get_next_id() -> int:
+        """Генерация id для новой записи."""
         idx = [e.id for e in events_list]
         if idx:
             return max(idx) + 1
