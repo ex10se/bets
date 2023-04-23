@@ -49,4 +49,4 @@ class TestEndpoints:
     @pytest.mark.asyncio
     async def test_get_events(self):
         """Тестирование get_events."""
-        assert await get_events() == events_list
+        assert await get_events() == [e for e in events_list if time.time() < e.deadline]
